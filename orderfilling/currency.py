@@ -1,3 +1,4 @@
+
 # coinprice = totalmarketvalue/coinsincirculation
 class Currency:
     _instance = None
