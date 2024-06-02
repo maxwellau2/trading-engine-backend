@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from orderfilling.currency import currency
+from orderfilling.orderbook.currency_singleton import currency
 
 router = APIRouter(prefix="/api", tags=["gayyy"])
 

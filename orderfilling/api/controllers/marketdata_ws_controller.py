@@ -1,7 +1,7 @@
 import asyncio
 from fastapi import WebSocket, WebSocketDisconnect
 from fastapi import APIRouter
-from orderfilling.currency import currency
+from orderfilling.orderbook.currency_singleton import currency
 from .connectionManager import ConnectionManager
 
 router = APIRouter(prefix="/ws")

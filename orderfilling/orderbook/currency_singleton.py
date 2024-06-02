@@ -1,11 +1,11 @@
 
 # coinprice = totalmarketvalue/coinsincirculation
-class Currency:
+class CurrencySingleton:
     _instance = None
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
-            cls._instance = super(Currency, cls).__new__(cls)
+            cls._instance = super(CurrencySingleton, cls).__new__(cls)
         return cls._instance
 
     def __init__(self, total_market_value: float = 0.0, coins_available: float = 0.0):
@@ -53,4 +53,4 @@ class Currency:
         return True
 
 # following singleton pattern to maintain state between other files
-currency: Currency = Currency(500, 5)
+currency: CurrencySingleton = CurrencySingleton(500, 5)
