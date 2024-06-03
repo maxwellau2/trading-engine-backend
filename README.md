@@ -13,8 +13,12 @@
 
 ## To do
 - Engine Wise
-1. Implement the FIFO, Quantity first priority Queue
-2. Fill the Orders based on Priority Queue
+1. Implement the FIFO, Quantity first priority Queue [DONE]
+2. Fill the Orders based on Priority Queue [DONE]
+3. create mock users
+4. fix endpoint formatting
+5. add body validation
+
 - API wise
-1. Implement the POST order method
+1. Implement the POST order method [DONE]
 2. Implement ORM data storaging (probably gonna use sqlite/postgresql + SQLAlchemy)
