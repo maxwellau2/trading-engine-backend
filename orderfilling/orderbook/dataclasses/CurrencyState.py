@@ -1,7 +1,8 @@
 from dataclasses import dataclass
+import numpy as np
 
 @dataclass
 class CurrencyState:
-    market_value: float
-    available_liquidity: float
-    price : float
+    market_value: np.double
+    available_liquidity: np.double
+    price : np.double
