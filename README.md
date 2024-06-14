@@ -15,9 +15,10 @@
 - Engine Wise
 1. Implement the FIFO, Quantity first priority Queue [DONE]
 2. Fill the Orders based on Priority Queue [DONE]
-3. create mock users
-4. fix endpoint formatting
-5. add body validation
+3. Test Order Filling Capabilities
+4. Create mock users
+5. Fix endpoint formatting
+6. Add body validation
 
 - API wise
 1. Implement the POST order method [DONE]

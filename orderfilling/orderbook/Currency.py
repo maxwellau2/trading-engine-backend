@@ -35,11 +35,22 @@ class Currency:
         """
         # when buy order is filled, increase total market value, decrease coins in circulation
         # first get the price of total coins
+        if coins == 0:
+            return False  # No order to fill
+        
         price = self.get_coin_price()
-        total_value = price * coins
-        self.__mutate_total_market_value__(total_value)
-        self.__mutate_available_liquidity__(-1*coins)
-        return True
 
+        if coins > 0:
+            # Buy order
+            total_value = price * coins
+            self.__mutate_total_market_value__(total_value)
+            self.__mutate_available_liquidity__(-coins)
+        else:
+            # Sell order
+            total_value = price * abs(coins)
+            self.__mutate_total_market_value__(-total_value)
+            self.__mutate_available_liquidity__(-coins)
+        
+        return True
 # following singleton pattern to maintain state between other files
 currency: Currency = Currency(500, 5)
