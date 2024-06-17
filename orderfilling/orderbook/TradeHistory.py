@@ -12,7 +12,7 @@ class TradeHistory:
         self.limit = 100 # base price off of past 100 trades
 
     def add_trade(self, executed_price:float, volume:float, executed_time:int) -> None:
-        self.orders.append(Trade(executed_price, volume, executed_time))
+        self.trade_history.append(Trade(executed_price, volume, executed_time))
         if len(self.trade_history) > self.limit:
             self.trade_history.pop()
     

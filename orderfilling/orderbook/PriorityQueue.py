@@ -59,3 +59,25 @@ class PriorityQueue:
 
     def is_empty(self) -> bool:
         return len(self.sorted_orders) == 0
+    
+    def max_price(self) -> float:
+        # since list is sorted, technically we can just read the first entry
+        # return self.sorted_orders[0].price
+        return max([x.price for x in self.sorted_orders])
+
+    def min_price(self) -> float:
+        # since list is sorted, technically we can just read the last entry
+        # return self.sorted_orders[-1].price
+        return min([x.price for x in self.sorted_orders])
+
+    
+    def update_volume(self, order_id, new_volume):
+        if order_id not in self.order_id_to_index:
+           raise "Order ID not in dict"
+        # if new volume is 0, remove it completely
+        if new_volume == 0:
+            self.remove(order_id)
+        # update the volume if there is partial order left
+        idx : int = self.order_id_to_index[order_id]
+        self.sorted_orders[idx].order_size = new_volume
+        return 
