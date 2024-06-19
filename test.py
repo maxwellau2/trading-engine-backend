@@ -64,7 +64,7 @@ class TestPriorityQueue(unittest.TestCase):
 
 class TestOrderBook(unittest.TestCase):
     def setUp(self):
-        self.order_book = OrderBook("TestBook", 1000000, 500000)
+        self.order_book = OrderBook("TestBook")
 
     def test_add_bid_order(self):
         bid_order = self.order_book.add_bid_order(100, 50)
@@ -75,10 +75,6 @@ class TestOrderBook(unittest.TestCase):
         ask_order = self.order_book.add_ask_order(100, 60)
         self.assertEqual(len(self.order_book.get_asks()), 1)
         self.assertEqual(self.order_book.get_asks()[0].price, 60)
-    
-    def test_market_state(self):
-        state = self.order_book.get_market_state()
-        self.assertIsInstance(state, CurrencyState)
     
     def test_bid_ask_spread(self):
         self.order_book.add_bid_order(100, 50)

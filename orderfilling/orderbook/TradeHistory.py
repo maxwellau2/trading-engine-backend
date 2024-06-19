@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 @dataclass
 class Trade:
@@ -8,7 +9,7 @@ class Trade:
 
 class TradeHistory:
     def __init__(self):
-        self.trade_history = []
+        self.trade_history : List[Trade] = []
         self.limit = 100 # base price off of past 100 trades
 
     def add_trade(self, executed_price:float, volume:float, executed_time:int) -> None:
@@ -17,9 +18,10 @@ class TradeHistory:
             self.trade_history.pop()
     
     def calculate_vwap(self):
+        print(self.trade_history)
         numerator = 0
         denominator = 0
         for trades in self.trade_history:
-            numerator += trades.price * trades.volume
+            numerator += trades.executed_price * trades.volume
             denominator += trades.volume
         return numerator/denominator 

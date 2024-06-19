@@ -9,16 +9,12 @@ from orderfilling.orderbook.dataclasses.CurrencyState import CurrencyState
 import time
 
 class OrderBook:
-    def __init__(self, name:str, total_market_value:float, available_liquidity:float) -> None:
+    def __init__(self, name:str) -> None:
         self.name = name
-        self.__currency_manager__ = Currency(total_market_value=total_market_value, available_liquidity=available_liquidity)
         # self.__all_orders__ = PriorityQueue()
         self.__bid_orders__ = PriorityQueue()
         self.__ask_orders__ = PriorityQueue()
         self.__trade_history__ = TradeHistory()
-
-    def get_market_state(self) -> CurrencyState:
-        return self.__currency_manager__.get_state()
     
     def get_bids(self) -> List[Order]:
         return self.__bid_orders__.sorted_orders
@@ -71,15 +67,13 @@ class OrderBook:
         return None
     
     def get_bid_ask_spread(self) -> float:
-        # return min(self.get_asks()) - max(self.get_bids())
         return self.__ask_orders__.min_price() - self.__bid_orders__.max_price()
     
     def get_mid_price(self) -> float:
         return (self.__ask_orders__.min_price() + self.__bid_orders__.max_price())/2
-        # return (min(self.get_asks()) + max(self.get_bids())) / 2
     
-    # def get_vwap_price(self) -> float:
-
+    def get_vwap_price(self) -> float:
+        return self.__trade_history__.calculate_vwap()
     
     def fill_available_orders(self):
         # check wrt bids
@@ -87,13 +81,13 @@ class OrderBook:
             for ask in self.get_asks():
                 if bid.price == ask.price:
                     remaining = self.execute_trade(bid, ask)
-                    # update the order book
+                    # update the order book, supports partial fills
                     self.__bid_orders__.update_volume(bid.order_id, remaining[0])
                     self.__ask_orders__.update_volume(ask.order_id, remaining[1])
 
     def execute_trade(self, bid: Order, ask: Order) -> Tuple[float, float]:
         """
-        returns a tuple of [remaining bid, remaining ask] volumes
+        returns a tuple of [remaining bid, remaining ask] volumes, supports partial fills
         """
         if bid.order_size > ask.order_size:
             self.__trade_history__.add_trade(ask.price, ask.order_size, int(time.time()))

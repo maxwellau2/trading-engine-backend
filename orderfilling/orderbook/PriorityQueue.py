@@ -30,6 +30,7 @@ class PriorityQueue:
         return self.sorted_orders[0] if self.sorted_orders else None
 
     def remove(self, order_id: str) -> bool:
+        print(self.order_id_to_index)
         if order_id in self.order_id_to_index:
             index = self.order_id_to_index[order_id]
             del self.order_id_to_index[order_id]  # Remove the mapping
@@ -39,14 +40,14 @@ class PriorityQueue:
         return False
 
     def _binary_search(self, price: float) -> int:
-        # Perform binary search to find the appropriate index for insertion
+        # Perform binary search to find the appropriate index for insertion based on price
         left, right = 0, len(self.sorted_orders)
         while left < right:
             mid = (left + right) // 2
             if self.sorted_orders[mid].price < price:
-                left = mid + 1
-            else:
                 right = mid
+            else:
+                left = mid + 1
         return left
 
     def _update_order_id_to_index(self, start_index: int):
@@ -78,6 +79,8 @@ class PriorityQueue:
         if new_volume == 0:
             self.remove(order_id)
         # update the volume if there is partial order left
-        idx : int = self.order_id_to_index[order_id]
-        self.sorted_orders[idx].order_size = new_volume
-        return 
+        else:
+            print(self.order_id_to_index)
+            idx : int = self.order_id_to_index[order_id]
+            self.sorted_orders[idx].order_size = new_volume
+            return 
