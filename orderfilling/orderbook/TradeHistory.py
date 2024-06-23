@@ -18,7 +18,8 @@ class TradeHistory:
             self.trade_history.pop()
     
     def calculate_vwap(self):
-        print(self.trade_history)
+        if len(self.trade_history) == 0:
+            return 0
         numerator = 0
         denominator = 0
         for trades in self.trade_history:

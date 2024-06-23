@@ -1,4 +1,3 @@
-from orderfilling.orderbook.Currency import Currency
 from orderfilling.orderbook.PriorityQueue import PriorityQueue
 from orderfilling.orderbook.TradeHistory import TradeHistory
 from orderfilling.orderbook.Orderbook import OrderBook

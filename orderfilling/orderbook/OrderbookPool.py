@@ -12,7 +12,7 @@ class OrderBookPool:
 
     def create_order_book(self, name:str, total_market_value:float, available_liquidity:float) -> OrderBook:
         if name not in self._order_books:
-            self._order_books[name] = OrderBook(name, total_market_value, available_liquidity)
+            self._order_books[name] = OrderBook(name)
         return self._order_books[name]
     
     def get_order_book_by_name(self, name:str) -> OrderBook:

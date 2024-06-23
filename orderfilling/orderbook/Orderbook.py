@@ -1,11 +1,9 @@
 # we will use class composition to define the orderbook
 # it is composed of the Currency class as defined in Currency.py
 from typing import List, Tuple
-from orderfilling.orderbook.Currency import Currency
 from orderfilling.orderbook.PriorityQueue import PriorityQueue
 from orderfilling.orderbook.TradeHistory import TradeHistory
 from orderfilling.orderbook.dataclasses.OrderDataClass import Order, Side
-from orderfilling.orderbook.dataclasses.CurrencyState import CurrencyState
 import time
 
 class OrderBook:

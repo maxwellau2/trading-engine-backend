@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from orderfilling.orderbook.currency_singleton import currency
 from orderfilling.orderbook.OrderbookPool import OrderBookPool
 from pydantic import BaseModel
 
@@ -16,15 +15,6 @@ class Order(BaseModel):
     qty: float
     price: float
 
-
-@router.post("/fill_order")
-async def fill_order(item:Item):
-    book = pool.get_order_book_by_name(item.ticker)
-    if not book:
-        return {"message": "invalid ticker"}
-    book.__currency_manager__.fill_order(item.qty)
-    # currency.fill_order(coins)
-    return {"message": "Order filled", "state": book.get_market_state().__dict__}
 
 @router.post("/place_order")
 async def place_order(order:Order):

@@ -29,4 +29,4 @@ async def monitor_order_book():
         for i in orderbook_dict:
             orderbook_dict[i].fill_available_orders()
         # order_book.fill_available_orders()
-        await asyncio.sleep(2)  # Adjust the interval as needed
+        await asyncio.sleep(0.5)  # Adjust the interval as needed
