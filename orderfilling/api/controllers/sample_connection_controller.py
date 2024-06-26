@@ -27,6 +27,7 @@ html = """
 </html>
 """
 
+
 @router.get("/")
 async def get_sample():
     return HTMLResponse(html)

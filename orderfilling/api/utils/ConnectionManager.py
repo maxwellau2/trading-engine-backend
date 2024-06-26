@@ -1,6 +1,7 @@
 from fastapi import WebSocket
 from fastapi.websockets import WebSocketState
 
+
 class ConnectionManager:
     def __init__(self):
         self.active_connections: list[WebSocket] = []
@@ -14,7 +15,7 @@ class ConnectionManager:
         print(f"Connected: {websocket.client}")
         print(f"Active connections: {len(self.active_connections)}")
 
-    def remove_from_active(self, websocket:WebSocket):
+    def remove_from_active(self, websocket: WebSocket):
         self.active_connections.remove(websocket)
 
     async def disconnect(self, websocket: WebSocket):
@@ -32,7 +33,9 @@ class ConnectionManager:
             try:
                 await websocket.send_text(message)
             except RuntimeError:
-                print(f"Attempted to send message to a closed WebSocket: {websocket.client}")
+                print(
+                    f"Attempted to send message to a closed WebSocket: {websocket.client}"
+                )
 
     async def broadcast(self, message: str):
         for connection in self.active_connections:

@@ -1,5 +1,8 @@
 from fastapi import APIRouter
-from orderfilling.api.controllers import MarketDataRestController, MarketOrderRestController
+from orderfilling.api.controllers import (
+    MarketDataRestController,
+    MarketOrderRestController,
+)
 
 router = APIRouter(prefix="/api")
 

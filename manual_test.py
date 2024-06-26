@@ -18,10 +18,10 @@ import time
 
 book = OrderBook("test")
 
-book.add_ask_order(10, 10.000000000000001,None)
-book.add_bid_order(10, 10.0001,None)
-book.add_bid_order(10, 25.3,None)
-book.add_ask_order(20, 25.3,None)
+book.add_ask_order(10, 10.000000000000001, None)
+book.add_bid_order(10, 10.0001, None)
+book.add_bid_order(10, 25.3, None)
+book.add_ask_order(20, 25.3, None)
 book.fill_available_orders()
 book.fill_available_orders()
 print(book.get_all_orders())

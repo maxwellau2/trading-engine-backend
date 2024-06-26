@@ -12,8 +12,13 @@ class PriorityQueue:
         self.order_id_to_index = {}  # Dictionary to store order ID to index mapping
 
     def push(self, order: Order):
-        index = self._binary_search(order.price)  # Find the appropriate index price wise
-        while index < len(self.sorted_orders) and self.sorted_orders[index].price == order.price:
+        index = self._binary_search(
+            order.price
+        )  # Find the appropriate index price wise
+        while (
+            index < len(self.sorted_orders)
+            and self.sorted_orders[index].price == order.price
+        ):
             # price collision, compare quantity size
             if self.sorted_orders[index].order_size > order.order_size:
                 index += 1
@@ -60,7 +65,7 @@ class PriorityQueue:
 
     def is_empty(self) -> bool:
         return len(self.sorted_orders) == 0
-    
+
     def max_price(self) -> float:
         # since list is sorted, technically we can just read the first entry
         # return self.sorted_orders[0].price
@@ -71,16 +76,15 @@ class PriorityQueue:
         # return self.sorted_orders[-1].price
         return min([x.price for x in self.sorted_orders])
 
-    
     def update_volume(self, order_id, new_volume):
         if order_id not in self.order_id_to_index:
-           raise "Order ID not in dict"
+            raise "Order ID not in dict"
         # if new volume is 0, remove it completely
         if new_volume == 0:
             self.remove(order_id)
         # update the volume if there is partial order left
         else:
             print(self.order_id_to_index)
-            idx : int = self.order_id_to_index[order_id]
+            idx: int = self.order_id_to_index[order_id]
             self.sorted_orders[idx].order_size = new_volume
-            return 
+            return

@@ -8,8 +8,9 @@ router = APIRouter(prefix="/ws")
 manager = ConnectionManager()
 pool = OrderBookPool()
 
+
 @router.websocket("/livedata/{client_id}/{ticker}")
-async def websocket_endpoint(websocket: WebSocket, client_id: str, ticker:str):
+async def websocket_endpoint(websocket: WebSocket, client_id: str, ticker: str):
     print(manager.active_connections)
     await websocket.accept()
     # authenticate websocket client ID, in manager.whitelist
