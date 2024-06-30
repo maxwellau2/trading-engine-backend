@@ -1,14 +1,21 @@
-from users.registration.model.UserModel import UserDB
-from keycove import generate_token, hash, encrypt, generate_secret_key
-from peewee import PostgresqlDatabase
+from typing import List
+from users.model.UserModel import UserDB
+from keycove import hash
+from peewee import Query
 
 
 class Registration:
-    def __init__(self, db_connection: PostgresqlDatabase) -> None:
-        self.users = UserDB()
+    def __init__(self) -> None:
+        pass
+
+    def create_table(self):
+        UserDB.create_table(safe=False)
+
+    def find_user_by_name(self, username:str) -> List[UserDB]:
+        return list(UserDB.select().where(UserDB.username == username))
 
     def __user_exists__(self, username: str) -> bool:
-        result = list(self.users.select().where(UserDB.username == username))
+        result = self.find_user_by_name(username)
         if len(result) != 0:
             return True
         return False
@@ -26,22 +33,28 @@ class Registration:
     def create_user(self, username: str, password: str) -> dict | None:
         if self.__user_exists__(username):
             return None
-        new_user = UserDB()
-        new_user.username = username
-        new_user.password = hash(password)
-
-        new_user.save()
-        return new_user.__dict__["__data__"]
+        res = UserDB.create(username=username, password=hash(password))
+        return res.__dict__["__data__"]
 
     def change_password(self, username: str, new_password: str):
         if not self.__user_exists__(username):
             return None
-        user = UserDB()
-        query = UserDB.update(password=new_password).where(user.username == username)
-        query.execute()
+        query: Query = UserDB.update(password=hash(new_password)).where(
+            UserDB.username == username
+        )
+        result = query.execute()
+        return result
 
-    def delete_user(self, username: str):
+    def delete_user(self, username: str, password:str) -> int | None:
+        """
+        returns None if user DNE
+        returns 1 is user is deleted
+        """
         if not self.__user_exists__(username):
             return None
-        user = UserDB()
-        query = user.delete().where()
+        user = self.find_user_by_name(username)
+        if user[0].password == hash(password):
+            query: Query = UserDB.delete().where(UserDB.username == username)
+            res = query.execute()
+            return res
+        return None

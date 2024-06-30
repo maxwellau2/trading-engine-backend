@@ -14,7 +14,7 @@ html = """
         </ul>
         <script>
             var client_id = Date.now()
-            var ws = new WebSocket(`ws://localhost:8000/ws/123`);
+            var ws = new WebSocket(`ws://localhost:8000/ws/livedata/123/coin1`);
             ws.onmessage = function(event) {
                 var messages = document.getElementById('messages')
                 var message = document.createElement('li')

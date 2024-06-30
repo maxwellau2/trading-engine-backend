@@ -10,19 +10,20 @@ from peewee import (
 import uuid
 import os
 from dotenv import load_dotenv
+from users.database import get_db_instance
 
-load_dotenv()
+# load_dotenv()
 
-DB_NAME = os.getenv("DB_NAME")
-DB_HOST = os.getenv("DB_HOST")
-DB_PORT = os.getenv("DB_PORT")
-DB_USERNAME = os.getenv("DB_USERNAME")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
+# DB_NAME = os.getenv("DB_NAME")
+# DB_HOST = os.getenv("DB_HOST")
+# DB_PORT = os.getenv("DB_PORT")
+# DB_USERNAME = os.getenv("DB_USERNAME")
+# DB_PASSWORD = os.getenv("DB_PASSWORD")
 
 
-db = PostgresqlDatabase(
-    database=DB_NAME, host=DB_HOST, port=DB_PORT, user=DB_USERNAME, password=DB_PASSWORD
-)
+# db = PostgresqlDatabase(
+#     database=DB_NAME, host=DB_HOST, port=DB_PORT, user=DB_USERNAME, password=DB_PASSWORD
+# )
 
 
 class UserDB(Model):
@@ -32,5 +33,8 @@ class UserDB(Model):
     # balance = FloatField(null=False)
 
     class Meta:
-        database = db
+        database = get_db_instance()
         db_table = "Users"
+
+
+# db.connect()

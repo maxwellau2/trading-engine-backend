@@ -32,7 +32,7 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str, ticker: str):
     try:
         while True:
             state = book.get_vwap_price()
-            await manager.send_personal_message(f"{state.__dict__}", websocket)
+            await manager.send_personal_message(f"{state}", websocket)
             await asyncio.sleep(1)
     except WebSocketDisconnect:
         # no need to disconnect, just remove
