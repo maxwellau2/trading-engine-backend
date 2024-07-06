@@ -8,12 +8,12 @@ router = APIRouter(prefix="/register", tags=["Registration"])
 
 
 @router.post("/signup")
-async def signup(username: str, password: str):
-    result = reg.create_user(username, password)
+async def signup(username: str, password: str, email: str):
+    result = reg.create_user(username, password, email)
     if result == None:
         resp = str({"status": "failed", "message": "username exists"})
         return Response(content=resp, status_code=200)
-    resp = str({"status": "success", "message": f"user created! {result['username']}"})
+    resp = str({"status": "success", "message": f"verification email sent! {result['username']}"})
     print(resp)
     return Response(content=resp, status_code=200)
 

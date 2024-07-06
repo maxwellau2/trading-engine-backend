@@ -1,3 +1,4 @@
+import time
 from typing import List
 from peewee import (
     PostgresqlDatabase,
@@ -12,20 +13,6 @@ import os
 from dotenv import load_dotenv
 from users.database import get_db_instance
 
-# load_dotenv()
-
-# DB_NAME = os.getenv("DB_NAME")
-# DB_HOST = os.getenv("DB_HOST")
-# DB_PORT = os.getenv("DB_PORT")
-# DB_USERNAME = os.getenv("DB_USERNAME")
-# DB_PASSWORD = os.getenv("DB_PASSWORD")
-
-
-# db = PostgresqlDatabase(
-#     database=DB_NAME, host=DB_HOST, port=DB_PORT, user=DB_USERNAME, password=DB_PASSWORD
-# )
-
-
 class UserDB(Model):
     id = UUIDField(primary_key=True, null=False, default=uuid.uuid4())
     username = TextField(null=False)
@@ -35,6 +22,18 @@ class UserDB(Model):
     class Meta:
         database = get_db_instance()
         db_table = "Users"
+
+class UserVerifyDB(Model):
+    id = UUIDField(primary_key=True, null=False, default=uuid.uuid4())
+    username = TextField(null=False)
+    password = TextField(null=False)
+    email = TextField(null=False)
+    verification_key = TextField(null=False)
+    created_at = IntegerField(null=False, default=int(time.time()))
+
+    class Meta:
+        database = get_db_instance()
+        db_table = "UserVerify"
 
 
 # db.connect()

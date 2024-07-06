@@ -75,8 +75,7 @@ class OrderBook:
         return (self.__ask_orders__.min_price() + self.__bid_orders__.max_price()) / 2
 
     def get_vwap_price(self) -> float:
-        res =  self.__trade_history__.calculate_vwap()
-        return res
+        return self.__trade_history__.calculate_vwap()
 
     def fill_available_orders(self):
         # check wrt bids
