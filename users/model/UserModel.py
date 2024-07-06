@@ -13,6 +13,7 @@ import os
 from dotenv import load_dotenv
 from users.database import get_db_instance
 
+
 class UserDB(Model):
     id = UUIDField(primary_key=True, null=False, default=uuid.uuid4())
     username = TextField(null=False)
@@ -22,6 +23,7 @@ class UserDB(Model):
     class Meta:
         database = get_db_instance()
         db_table = "Users"
+
 
 class UserVerifyDB(Model):
     id = UUIDField(primary_key=True, null=False, default=uuid.uuid4())

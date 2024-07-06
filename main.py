@@ -17,6 +17,7 @@ app.include_router(MarketRouter.router)
 app.include_router(UsersController.router)
 app.include_router(sample_connection_controller.router)
 
+
 @app.on_event("startup")
 async def startup_event():
     asyncio.create_task(monitor_order_book())

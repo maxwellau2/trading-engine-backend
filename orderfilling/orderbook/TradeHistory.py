@@ -12,7 +12,7 @@ class Trade:
 class TradeHistory:
     def __init__(self):
         self.trade_history: List[Trade] = []
-        self.trade_history_buffer : List[Trade] = []
+        self.trade_history_buffer: List[Trade] = []
         self.limit = 100  # base price off of past 100 trades
         self.buffer_limit = 200
 
