@@ -31,3 +31,13 @@ async def delete_user(username: str, password: str):
         return Response(content=resp, status_code=404)
     resp = str({"status": "success", "message": "user deleted"})
     return Response(content=resp, status_code=200)
+
+@router.post("/verify")
+async def verify_user(key: str):
+    result = reg.verify_new_user(key)
+    print("result", result)
+    if not result:
+        resp = str({"status": "failed", "message": "invalid verification key"})
+        return Response(content=resp, status_code=400)
+    resp = str({"status": "success", "message": "user created"})
+    return Response(content=resp, status_code=200)

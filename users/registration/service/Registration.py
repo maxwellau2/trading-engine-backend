@@ -9,6 +9,7 @@ import os
 load_dotenv()
 EMAIL_USER = os.getenv("EMAIL_USER")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 
 class Registration:
@@ -18,7 +19,7 @@ class Registration:
 
     def send_email(self, receiver: str, verification_key: str):
         body = f"""
-            Click the link in the next 10 minutes to verify your account {verification_key}
+            Click the link in the next 10 minutes to verify your account {FRONTEND_URL}verify/{verification_key}
         """
         subject = "Verify your account"
         self.yag.send(
@@ -35,6 +36,9 @@ class Registration:
 
     def find_user_by_name_unverified(self, username: str) -> List[UserDB]:
         return list(UserVerifyDB.select().where(UserVerifyDB.username == username))
+    
+    def find_user_by_verification_code_unverified(self, verification_key: str) -> List[UserVerifyDB]:
+        return list(UserVerifyDB.select().where(UserVerifyDB.verification_key == verification_key))
 
     def __user_exists__(self, username: str) -> bool:
         result = self.find_user_by_name(username)
@@ -70,6 +74,19 @@ class Registration:
         )
         self.send_email(email, secret)
         # res = UserDB.create(username=username, password=hash(password))
+        return res.__dict__["__data__"]
+    
+    def verify_new_user(self, verification_key:str):
+        users = self.find_user_by_verification_code_unverified(verification_key)
+        if len(users) == 0: #user DNE
+            return None
+        single_user = users[0]
+        print(single_user)
+        res = UserDB.create(
+            username=single_user.username,
+            password=single_user.password,
+            email=single_user.email,
+        )
         return res.__dict__["__data__"]
 
     def change_password(self, username: str, new_password: str):

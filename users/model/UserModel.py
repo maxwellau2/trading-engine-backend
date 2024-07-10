@@ -18,6 +18,8 @@ class UserDB(Model):
     id = UUIDField(primary_key=True, null=False, default=uuid.uuid4())
     username = TextField(null=False)
     password = TextField(null=False)
+    email = TextField(null=False)
+    created_at = IntegerField(null=False, default=int(time.time()))
     # balance = FloatField(null=False)
 
     class Meta:
