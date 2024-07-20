@@ -6,3 +6,6 @@ test-pq:
 
 run-dev:
 	fastapi dev main.py
+
+update-dependencies:
+	pip freeze >> "requirements.txt"

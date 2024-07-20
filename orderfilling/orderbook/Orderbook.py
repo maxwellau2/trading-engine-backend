@@ -5,6 +5,7 @@ from orderfilling.orderbook.PriorityQueue import PriorityQueue
 from orderfilling.orderbook.TradeHistory import TradeHistory
 from orderfilling.orderbook.dataclasses.OrderDataClass import Order, Side
 import time
+from orderfilling.orderbook.OHLCLogger import OHLCV, OHLCVLogger
 
 
 class OrderBook:
@@ -14,6 +15,7 @@ class OrderBook:
         self.__bid_orders__ = PriorityQueue()
         self.__ask_orders__ = PriorityQueue()
         self.__trade_history__ = TradeHistory()
+        self.__ohlcv_data__ = OHLCVLogger(interval=60)
 
     def get_bids(self) -> List[Order]:
         return self.__bid_orders__.sorted_orders
@@ -87,10 +89,17 @@ class OrderBook:
                     self.__bid_orders__.update_volume(bid.order_id, remaining[0])
                     self.__ask_orders__.update_volume(ask.order_id, remaining[1])
 
+    def get_trade_history(self):
+        return self.__trade_history__.get_serialized_history()
+
     def execute_trade(self, bid: Order, ask: Order) -> Tuple[float, float]:
         """
         returns a tuple of [remaining bid, remaining ask] volumes, supports partial fills
         """
+        timestamp = int(time.time())
+        trade_price = ask.price if bid.order_size >= ask.order_size else bid.price
+        trade_volume = min(bid.order_size, ask.order_size)
+        self.__ohlcv_data__.update(timestamp, trade_price, trade_volume)
         if bid.order_size > ask.order_size:
             self.__trade_history__.add_trade(
                 ask.price, ask.order_size, int(time.time())
@@ -106,3 +115,6 @@ class OrderBook:
                 bid.price, bid.order_size, int(time.time())
             )
             return (0, 0)
+
+    def get_ohlcv_data(self) -> List[OHLCV]:
+        return self.__ohlcv_data__.get_ohlcv()

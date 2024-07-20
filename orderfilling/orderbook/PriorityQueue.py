@@ -69,11 +69,15 @@ class PriorityQueue:
     def max_price(self) -> float:
         # since list is sorted, technically we can just read the first entry
         # return self.sorted_orders[0].price
+        if not self.sorted_orders:
+            return 0
         return max([x.price for x in self.sorted_orders])
 
     def min_price(self) -> float:
         # since list is sorted, technically we can just read the last entry
         # return self.sorted_orders[-1].price
+        if not self.sorted_orders:
+            return 0
         return min([x.price for x in self.sorted_orders])
 
     def update_volume(self, order_id, new_volume):

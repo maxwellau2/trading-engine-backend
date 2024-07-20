@@ -8,6 +8,13 @@ class Trade:
     volume: float
     executed_time: int  # in epoch time
 
+    def to_dict(self) -> dict:
+        return {
+            "executed_price" : self.executed_price,
+            "volume": self.volume,
+            "executed_time": self.executed_time
+        }
+
 
 class TradeHistory:
     def __init__(self):
@@ -25,9 +32,13 @@ class TradeHistory:
         if len(self.trade_history_buffer) >= self.buffer_limit:
             # store to DB
             # refer to https://www.youtube.com/watch?v=p8tnmEdeOU0
-            pass
+            # pass
+            self.trade_history_buffer.pop()
 
-    # def get_current_window_volume(self):
+    def get_serialized_history(self) -> List[dict]:
+        if not self.trade_history:
+            return []
+        return [trade.to_dict() for trade in self.trade_history]
 
     def calculate_vwap(self):
         if len(self.trade_history) == 0:

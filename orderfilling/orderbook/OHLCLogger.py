@@ -13,33 +13,54 @@ class OHLCV:
     close: float
     volume: float
 
+    def to_dict(self) -> dict:
+        return {
+            "time": self.time,
+            "open": self.open,
+            "high": self.high,
+            "low": self.low,
+            "close": self.close,
+            "volume": self.volume
+        }
+
 
 class OHLCVLogger:
-    def __init__(self, initial_data: List[OHLCV] = [], limit: int = 200):
-        self.history = initial_data
-        self.buffer: List[OHLCV] = []
-        self.storeable: List[OHLCV] = []
-        self.limit = limit
-        self.last_logged = time.time()
-        self.current_window: OHLCV = (
-            self.history[-1] if len(self.history) != 0 else OHLCV(0, 0, 0, 0, 0, 0)
+    def __init__(self, interval: int = 300):  # 5-minute interval
+        self.interval = interval
+        self.ohlcv: List[OHLCV] = []
+        self.current_candle = None
+
+    def _create_new_candle(self, timestamp: int, price: float, volume: float):
+        start_time = (timestamp // self.interval) * self.interval
+        self.current_candle = OHLCV(
+            time=start_time,
+            open=price,
+            high=price,
+            low=price,
+            close=price,
+            volume=volume
         )
 
-    def update_current_OHLC(self, current_price: float):
-        if (time.time() - self.last_logged) >= 60:
-            self.current_window.open = current_price
-        if current_price > self.current_window.high:
-            self.current_window.high = current_price
-        if current_price < self.current_window.low:
-            self.current_window.low = current_price
-        self.current_window.close = current_price
-        return
+    def update(self, timestamp: int, price: float, volume: float):
+        if not self.current_candle or timestamp >= self.current_candle.time + self.interval:
+            if self.current_candle:
+                self._finalize_current_candle()
+            self._create_new_candle(timestamp, price, volume)
+        else:
+            self._update_current_candle(price, volume)
 
-    def log(self, current_price: float):
-        # check if current time is 1 minute away from previous time
-        self.update_current_OHLC(current_price)
-        if (time.time() - self.last_logged) >= 60:
-            self.history.append(self.current_window)
-            self.last_logged = time.time()
-            print(f"logged at {time.time()}")
-        return
+    def _update_current_candle(self, price: float, volume: float):
+        self.current_candle.high = max(self.current_candle.high, price)
+        self.current_candle.low = min(self.current_candle.low, price)
+        self.current_candle.close = price
+        self.current_candle.volume += volume
+
+    def _finalize_current_candle(self):
+        self.ohlcv.append(self.current_candle)
+        self.current_candle = None
+
+    def get_ohlcv(self) -> List[OHLCV]:
+        if self.current_candle:
+            # self._finalize_current_candle()
+            return [candle.to_dict() for candle in self.ohlcv] + [self.current_candle.to_dict()]
+        return [candle.to_dict() for candle in self.ohlcv]

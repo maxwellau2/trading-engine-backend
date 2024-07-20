@@ -8,6 +8,7 @@ from orderfilling.api.controllers import (
 )
 from orderfilling.api.utils.OrderBookMonitor import monitor_order_book
 from users.controller import UsersController
+from users.login.controller import Login
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -41,6 +42,7 @@ app.include_router(WSController.router)
 app.include_router(MarketRouter.router)
 app.include_router(UsersController.router)
 app.include_router(sample_connection_controller.router)
+app.include_router(Login.router)
 
 
 @app.on_event("startup")
