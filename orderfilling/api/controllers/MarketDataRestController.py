@@ -7,7 +7,6 @@ import json
 pool = OrderBookPool()
 router = APIRouter(prefix="/market_data", tags=["Market Data Endpoints"])
 
-
 @router.get("/market_state")
 async def get_market_state(ticker: str):
     book = pool.get_order_book_by_name(ticker)

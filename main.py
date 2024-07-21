@@ -1,5 +1,6 @@
 import asyncio
-from fastapi import FastAPI
+import json
+from fastapi import FastAPI, Request, Response
 from orderfilling.api.controllers import (
     MarketDataRestController,
     WSController,
@@ -10,8 +11,10 @@ from orderfilling.api.utils.OrderBookMonitor import monitor_order_book
 from users.controller import UsersController
 from users.login.controller import Login
 from fastapi.middleware.cors import CORSMiddleware
+from middleware.UserAuth import UserAuth
 
 app = FastAPI()
+app_auth = FastAPI()
 
 origins = [
     "http://localhost",
@@ -27,23 +30,43 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# origins = ["*"]
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=origins,
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
+app_auth.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app_auth.middleware("http")
+async def verifyJWT(request: Request, call_next):
+    print("middlewaring")
+    # UserAuth.check_jwt(Request.cookies)
+    print(request.cookies)
+    if "payload" not in request.cookies:
+        response = json.dumps({"message": "forbidden"})
+        return Response(status_code= 403, content=response)
+    else:
+        token = request.cookies['payload']
+        print(token)
+        is_valid_user = UserAuth.check_jwt(token)
+        if is_valid_user:
+            response = await call_next(request)
+            return response
+        else:
+            res = json.dumps({"message": "invalid jwt"})
+            return Response(status_code=403, content=res)
+
 
 app.include_router(WSController.router)
-# app.include_router(MarketDataRestController.router)
-app.include_router(MarketRouter.router)
 app.include_router(UsersController.router)
 app.include_router(sample_connection_controller.router)
 app.include_router(Login.router)
 
+app_auth.include_router(MarketRouter.router)
+
+app.mount("/trade", app_auth)
 
 @app.on_event("startup")
 async def startup_event():
