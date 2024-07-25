@@ -31,7 +31,7 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str, ticker: str):
     await manager.add_connect(websocket)
     try:
         while True:
-            state = book.get_vwap_price()
+            state = book.get_ohlcv_data()
             await manager.send_personal_message(f"{state}", websocket)
             await asyncio.sleep(1)
     except WebSocketDisconnect:

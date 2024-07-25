@@ -11,7 +11,7 @@ from peewee import (
 import uuid
 import os
 from dotenv import load_dotenv
-from users.database import get_db_instance
+from database import get_db_instance
 
 
 class UserDB(Model):

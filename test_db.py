@@ -1,6 +1,6 @@
 import os
 from users.registration.service.Registration import Registration
-from users.database import get_db_instance
+from database import get_db_instance
 
 # db = get_db_instance()
 # print(db.connect())

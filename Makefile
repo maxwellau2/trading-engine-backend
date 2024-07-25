@@ -7,5 +7,8 @@ test-pq:
 run-dev:
 	fastapi dev main.py
 
+migrate:
+	python migrate.py
+
 update-dependencies:
 	pip freeze >> "requirements.txt"

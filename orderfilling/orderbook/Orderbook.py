@@ -1,5 +1,3 @@
-# we will use class composition to define the orderbook
-# it is composed of the Currency class as defined in Currency.py
 from typing import List, Tuple
 from orderfilling.orderbook.PriorityQueue import PriorityQueue
 from orderfilling.orderbook.TradeHistory import TradeHistory
@@ -27,7 +25,7 @@ class OrderBook:
         """
         returns a sorted list of Orders, including bids and asks
         """
-        return self.__ask_orders__.sorted_orders + self.__bid_orders__.sorted_orders
+        return [x.to_dict() for x in self.__ask_orders__.sorted_orders] + [x.to_dict() for x in self.__bid_orders__.sorted_orders]
 
     def __check_order_params__(
         self, size: float, price: float, timenow: int | None
@@ -48,7 +46,7 @@ class OrderBook:
         if self.__check_order_params__(size, price, timenow):
             if not timenow:
                 timenow = int(time.time())
-            new_order = Order(time=timenow, side=Side.BUY, order_size=size, price=price)
+            new_order = Order(time=timenow, side=Side.BUY, order_size=size, price=price, ticker=self.name)
             self.__bid_orders__.push(new_order)
             return new_order
         return None
@@ -64,10 +62,10 @@ class OrderBook:
             if not timenow:
                 timenow = int(time.time())
             new_order = Order(
-                time=timenow, side=Side.SELL, order_size=size, price=price
+                time=timenow, side=Side.SELL, order_size=size, price=price, ticker=self.name
             )
             self.__ask_orders__.push(new_order)
-            return new_order
+            return new_order.to_dict()
         return None
 
     def get_bid_ask_spread(self) -> float:
@@ -102,17 +100,17 @@ class OrderBook:
         self.__ohlcv_data__.update(timestamp, trade_price, trade_volume)
         if bid.order_size > ask.order_size:
             self.__trade_history__.add_trade(
-                ask.price, ask.order_size, int(time.time())
+                executed_price=ask.price, volume=ask.order_size, executed_time=int(time.time()), ticker=self.name,
             )
             return (bid.order_size - ask.order_size, 0)
         elif bid.order_size < ask.order_size:
             self.__trade_history__.add_trade(
-                bid.price, bid.order_size, int(time.time())
+                executed_price=bid.price, volume=bid.order_size, executed_time=int(time.time()), ticker=self.name,
             )
             return (0, ask.order_size - bid.order_size)
         else:
             self.__trade_history__.add_trade(
-                bid.price, bid.order_size, int(time.time())
+                executed_price=bid.price, volume=bid.order_size, executed_time=int(time.time()), ticker=self.name,
             )
             return (0, 0)
 

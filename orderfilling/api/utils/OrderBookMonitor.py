@@ -23,3 +23,4 @@ async def monitor_order_book():
             orderbook_dict[i].fill_available_orders()
         # order_book.fill_available_orders()
         await asyncio.sleep(0.5)  # Adjust the interval as needed
+

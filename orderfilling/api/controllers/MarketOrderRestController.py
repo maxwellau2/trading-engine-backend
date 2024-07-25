@@ -5,7 +5,6 @@ from pydantic import BaseModel
 pool = OrderBookPool()
 router = APIRouter(prefix="/trading", tags=["Trading Endpoints"])
 
-
 class Item(BaseModel):
     ticker: str
     qty: float
